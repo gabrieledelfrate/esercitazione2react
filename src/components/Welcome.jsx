@@ -6,10 +6,10 @@ import Col from "react-bootstrap/Col";
 
 const Welcome = () => {
   return (
-    <Container className="mb-4">
+    <Container className="mb-4 bg-warning">
       <Row>
         <Col className="transition-from-left">
-          <h3>Welcome to Bookshelf!</h3>
+          <h3>Welcome to BookShelf!</h3>
           <h5>
             If you're too lazy to get up off the couch, dress up and go to a
             real library, that's the place for you!{" "}

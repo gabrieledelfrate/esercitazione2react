@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 const CustomNavbar = (props) =>{
     
     return (
-        <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary bg-light.bg-gradient">
+        <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary bg-warning">
             <Container fluid>
                 <Navbar.Brand href="#home">
                     BookShelf!
