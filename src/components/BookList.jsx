@@ -65,8 +65,8 @@ class BookList extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    {filteredBooks.map(book => (
-                        <Col xs={12} md={4} key={book.asin}>
+                    {filteredBooks.map((book, index) => (
+                        <Col xs={12} md={4} key={`${book.asin}-${index}`}>
                             <SingleBook book={book} />
                         </Col>
                     ))}

@@ -1,11 +1,17 @@
 import React from 'react';
 
 const SingleComment = ({ comment }) => {
+    if (!comment || !comment.comment || !comment.rate || !comment.elementId) {
+        return null;
+
+    }
     return (
         <div>
-            <p>Comment: {comment.comment}</p>
-            <p>Rate: {comment.rate}</p>
-        </div>
+        <h2>Comments</h2>
+        {comment.map((comment, index) => (
+            <SingleComment key={index} comment={comment} />
+        ))}
+    </div>
     );
 };
 
