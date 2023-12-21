@@ -1,16 +1,13 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import CommentArea from "./CommentArea";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import booksData from "../data/books.json";
+
+
 
 class SingleBook extends React.Component {
-	state = { selected: false };
-    state = {showModal: false };
-    
+	state = { selected: false, showModal: false };    
 
     handleShowModal = () => {
         this.setState({ showModal: true });
@@ -39,7 +36,9 @@ class SingleBook extends React.Component {
                       </Button>
                       <Button variant="secondary">Add to the cart</Button>
                 </Card.Body>
-            </Card><Modal show={this.state.showModal} onHide={this.handleCloseModal}>
+            </Card>
+            {this.state.selected && <CommentArea bookId={this.props.book.id} />}            
+            <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
                     <Modal.Header closeButton>
                         <Modal.Title>Instant Book Delivery Sistem ©</Modal.Title>
                     </Modal.Header>
