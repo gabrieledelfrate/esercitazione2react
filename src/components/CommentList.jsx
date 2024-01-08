@@ -8,8 +8,8 @@ class CommentsList extends React.Component {
         return (
             <div>
                 <h2>Comments</h2>
-                {comments.map((comment, index) => (
-                    <SingleComment key={index} comment={comment} />
+                {comments.map((comment) => (
+                    <SingleComment comment={comment}  key={comment._id} />
                 ))}
             </div>
         );

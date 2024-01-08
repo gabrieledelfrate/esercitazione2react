@@ -1,12 +1,15 @@
 import React from 'react';
 import { Col, Row, Form } from 'react-bootstrap';
+import Selettori from './Selettori';
 import SingleBook from './SingleBook';
+import CommentArea from './CommentArea';
 import booksData from "../data/books.json";
 
 class BookList extends React.Component {
-    state = { 
+    state = {
         searchQuery: '',
-        selectedGenre: "all"
+        selectedGenre: "all",
+        selectedBookAsin: null,
     };
 
     handleGenreChange = (event) => {
@@ -17,8 +20,12 @@ class BookList extends React.Component {
         this.setState({ searchQuery: event.target.value.toLowerCase() });
     };
 
+    handleBookSelect = (asin) => {
+        this.setState({ selectedBookAsin: asin });
+    };
+
     render() {
-        const { selectedGenre, searchQuery } = this.state;
+        const { selectedGenre, searchQuery, selectedBookAsin } = this.state;
         const genres = ["all", ...Object.keys(booksData)];
 
         let filteredBooks = booksData[selectedGenre] || Object.values(booksData).flat();
@@ -34,44 +41,36 @@ class BookList extends React.Component {
         );
 
         return (
-            <div>
-                <div className="d-flex justify-content-center">
-                    <Form.Control
-                        as="select"
-                        onChange={this.handleGenreChange}
-                        className="w-50"
-                    >
-                        <option value="" disabled>
-                            Select your genre
-                        </option>
-                        {genres.map((genre, index) => (
-                            <option key={index} value={genre}>
-                                {genre}
-                            </option>
-                        ))}
-                    </Form.Control>
-                </div>
+           <div>
+                <Selettori
+                    selectedGenre={selectedGenre}
+                    searchQuery={searchQuery}
+                    handleGenreChange={this.handleGenreChange}
+                    handleSearchChange={this.handleSearchChange}
+                />
                 <Row>
-                    <Col>
-                        <Form.Group>
-                            <Form.Label>Cerca un libro</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Scrivi un titolo o parte di esso"
-                                value={searchQuery}
-                                onChange={this.handleSearchChange}
-                            />
-                        </Form.Group>
+                    <Col xs={8}>
+                        <Row>
+                            {filteredBooks.map((book, index) => (
+                                <Col xs={12} md={4} key={`${book.asin}-${index}`}>
+                                    <SingleBook
+                                        book={book}
+                                        isSelected={book.asin === selectedBookAsin}
+                                        onSelect={this.handleBookSelect}
+                                    />
+                                </Col>
+                            ))}
+                        </Row>
+                    </Col>
+                    <Col xs={4}>
+                        {selectedBookAsin ? (
+                            <CommentArea bookAsin={selectedBookAsin} />
+                        ) : (
+                            <p>Seleziona un libro per vedere i commenti</p>
+                        )}
                     </Col>
                 </Row>
-                <Row>
-                    {filteredBooks.map((book, index) => (
-                        <Col xs={12} md={4} key={`${book.asin}-${index}`}>
-                            <SingleBook book={book} />
-                        </Col>
-                    ))}
-                </Row>
-            </div>
+           </div>
         );
     }
 }
