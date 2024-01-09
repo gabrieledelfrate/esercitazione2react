@@ -1,51 +1,45 @@
-/*TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTliZmNhYmUwZGQxZDAwMTgyZDE3NjMiLCJpYXQiOjE3MDQ3MjE1NzksImV4cCI6MTcwNTkzMTE3OX0.O7VGMqlOP9afseag91o5MIEv6fdMhCG7dUn4CQZzb0k*/
+/*TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTlkNTI5ZGU2Mjg4NjAwMTg4M2Y0MmUiLCJpYXQiOjE3MDQ4MDkxMTcsImV4cCI6MTcwNjAxODcxN30.obDBsC0hsBTOGi23Vw1wU8kqvoGJY4DesWcfWoMd5ps*/
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Form, FormLabel } from "react-bootstrap";
+import { Form, Button, InputGroup } from 'react-bootstrap';
 
-class CommentArea extends React.Component {
-    state = {
-        comments: [],
-        newComment: '',
-        newRate: '1',
-    };
+const CommentArea = ({ bookAsin }) => {
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const [newRate, setNewRate] = useState('1');
 
-    componentDidMount() {
-        this.fetchComments();
-    }
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const response = await axios.get(
+                    `https://striveschool-api.herokuapp.com/api/comments/${bookAsin}`,
+                    {
+                        headers: {
+                            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTlkNTI5ZGU2Mjg4NjAwMTg4M2Y0MmUiLCJpYXQiOjE3MDQ4MDkxMTcsImV4cCI6MTcwNjAxODcxN30.obDBsC0hsBTOGi23Vw1wU8kqvoGJY4DesWcfWoMd5ps',
+                        },
+                    }
+                );
+                setComments(response.data);
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+                setComments([]);
+            }
+        };
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.bookAsin !== this.props.bookAsin) {
-            this.fetchComments();
+        fetchComments();
+    }, [bookAsin]);
+
+    const handleInputChange = (event) => {
+        if (event.target.name === 'newComment') {
+            setNewComment(event.target.value);
+        } else if (event.target.name === 'newRate') {
+            setNewRate(event.target.value);
         }
-    }
-
-    fetchComments = async () => {
-        try {
-            const response = await axios.get(
-                `https://striveschool-api.herokuapp.com/api/comments/${this.props.bookAsin}`,
-                {
-                    headers: {
-                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTliZmNhYmUwZGQxZDAwMTgyZDE3NjMiLCJpYXQiOjE3MDQ3MjE1NzksImV4cCI6MTcwNTkzMTE3OX0.O7VGMqlOP9afseag91o5MIEv6fdMhCG7dUn4CQZzb0k',
-                    },
-                }
-            );
-            this.setState({ comments: response.data });
-        } catch (error) {
-            console.error('Error fetching comments:', error);
-            this.setState({ comments: [] });
-        }
     };
 
-    handleInputChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
-    };
-
-    handleSubmit = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-
-        const { newComment, newRate } = this.state;
 
         try {
             await axios.post(
@@ -53,59 +47,78 @@ class CommentArea extends React.Component {
                 {
                     comment: newComment,
                     rate: newRate,
-                    elementId: this.props.bookAsin,
+                    elementId: bookAsin,
                 },
                 {
                     headers: {
-                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTliZmNhYmUwZGQxZDAwMTgyZDE3NjMiLCJpYXQiOjE3MDQ3MjE1NzksImV4cCI6MTcwNTkzMTE3OX0.O7VGMqlOP9afseag91o5MIEv6fdMhCG7dUn4CQZzb0k',
+                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTlkNTI5ZGU2Mjg4NjAwMTg4M2Y0MmUiLCJpYXQiOjE3MDQ4MDkxMTcsImV4cCI6MTcwNjAxODcxN30.obDBsC0hsBTOGi23Vw1wU8kqvoGJY4DesWcfWoMd5ps',
                     },
                 }
             );
-            this.setState({ newComment: '', newRate: '1' });
-            this.fetchComments();
+            setNewComment('');
+            setNewRate('1');
         } catch (error) {
             console.error('Error posting comment:', error);
         }
+
+        const fetchComments = async () => {
+            try {
+                const response = await axios.get(
+                    `https://striveschool-api.herokuapp.com/api/comments/${bookAsin}`,
+                    {
+                        headers: {
+                            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTlkNTI5ZGU2Mjg4NjAwMTg4M2Y0MmUiLCJpYXQiOjE3MDQ4MDkxMTcsImV4cCI6MTcwNjAxODcxN30.obDBsC0hsBTOGi23Vw1wU8kqvoGJY4DesWcfWoMd5ps',
+                        },
+                    }
+                );
+                setComments(response.data);
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+                setComments([]);
+            }
+        };
+
+        fetchComments();
     };
 
-    render() {
-        return (
-            <div>
-                <h3>Commenti</h3>
-                {this.state.comments.map((comment, index) => (
-                    <div key={index}>
-                        <p>{comment.comment}</p>
-                        <p>Rate: {comment.rate}</p>
-                    </div>
-                ))}
-                <Form onSubmit={this.handleSubmit}>
-                    <FormLabel>
-                        Nuovo Commento:
-                        <textarea
-                            name="newComment"
-                            value={this.state.newComment}
-                            onChange={this.handleInputChange}
-                        />
-                    </FormLabel>
-                    <FormLabel>
-                        Valutazione:
-                        <select
-                            name="newRate"
-                            value={this.state.newRate}
-                            onChange={this.handleInputChange}
-                        >
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                    </FormLabel>
-                    <button type="submit">Invia commento</button>
-                </Form>
-            </div>
-        );
-    }
-}
+    return (
+        <div>
+            <h3>Commenti</h3>
+            {comments.map((comment, index) => (
+                <div key={index}>
+                    <p>{comment.comment}</p>
+                    <p>Rate: {comment.rate}</p>
+                </div>
+            ))}
+            <Form onSubmit={handleSubmit}>
+                <InputGroup>
+                    <InputGroup.Text>Nuovo Commento:</InputGroup.Text>
+                    <Form.Control
+                        as="textarea"
+                        aria-label="Nuovo Commento:"
+                        name="newComment"
+                        value={newComment}
+                        onChange={handleInputChange}
+                    />
+                </InputGroup>
+
+                <Form.Select
+                    aria-label="Valutazione"
+                    name="newRate"
+                    value={newRate}
+                    onChange={handleInputChange}
+                >
+                    <option value="" disabled>Valutazione</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </Form.Select>
+                <Button type="submit">Invia commento</Button>
+            </Form>
+        </div>
+    );
+};
 
 export default CommentArea;

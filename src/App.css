@@ -53,3 +53,7 @@
   opacity: 1;
   transform: translateX(0);
 }
+
+#genere{
+    width: 3rem;
+}
